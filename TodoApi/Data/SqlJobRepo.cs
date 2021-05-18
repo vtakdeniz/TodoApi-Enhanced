@@ -36,20 +36,20 @@ namespace TodoApi.Data
             _context.jobs.Remove(job);
         }
 
-        public IEnumerable<Job> GetAllJobs()
+        public async Task<IEnumerable<Job>> GetAllJobs()
         {
-            return  _context.jobs.ToList();
+            return await _context.jobs.ToListAsync();
         }
 
-        public Job GetJobById(int id)
+        public async Task<Job> GetJobById(int id)
         {
-            var job =  _context.jobs.Find(id);
+            var job =  await _context.jobs.FindAsync(id);
             return job;
         }
 
-        public  bool SaveChanges()
+        public async Task<bool> SaveChanges()
         {
-            return  _context.SaveChanges() >= 0;
+            return  await _context.SaveChangesAsync() >= 0;
         }
 
         public void UpdateJob(Job job)

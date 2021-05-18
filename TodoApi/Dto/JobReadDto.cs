@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace TodoApi.Dto
 {
     public class JobReadDto
@@ -21,5 +22,7 @@ namespace TodoApi.Dto
 
 
         public bool IsFinished { get; set; } = false;
+
+        
     }
 }

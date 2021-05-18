@@ -26,33 +26,33 @@ namespace TodoApi.Controllers
 
         // GET: api/values
         [HttpGet("{id}", Name = "GetJobById")]
-        public ActionResult<Job> GetJobById(int id)
+        public async Task<ActionResult<Job>> GetJobById(int id)
         {
-            var job =  _repo.GetJobById(id);
+            var job =  await _repo.GetJobById(id);
             if (job == null) {
                 return NotFound();
             }
 
-            return Ok(job);
+            return Ok(_mapper.Map<JobReadDto>(job));
         }
 
         // GET api/values/5
         [HttpGet]
-        public ActionResult<IEnumerable<Job>> GetAllJobs()
+        public async Task<ActionResult<IEnumerable<Job>>> GetAllJobs()
         {
-            var result =  _repo.GetAllJobs();
-            return Ok(result);
+            var result = await _repo.GetAllJobs();
+            return Ok(_mapper.Map<IEnumerable<JobReadDto>>(result));
         }
 
         // POST api/values
         [HttpPost]
-        public  ActionResult<Job> CreateJob([FromBody] JobCreateDto jobCreateDto)
+        public async Task<ActionResult<Job>> CreateJob([FromBody] JobCreateDto jobCreateDto)
         {
             var job = _mapper.Map<Job>(jobCreateDto);
 
             _repo.CreateJob(job);
 
-           _repo.SaveChanges();
+            await _repo.SaveChanges();
 
             var messageDto = _mapper.Map<JobReadDto>(job);
             return CreatedAtRoute(nameof(GetJobById), new { Id = messageDto.Id }, messageDto);
@@ -60,9 +60,9 @@ namespace TodoApi.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public  ActionResult UpdateJob(int id, [FromBody] UserUpdateDto userUpdateDto)
+        public  async Task<ActionResult> UpdateJob(int id, [FromBody] JobUpdateDto jobUpdateDto)
         {
-            var jobRepo =  _repo.GetJobById(id);
+            var jobRepo = await _repo.GetJobById(id);
 
             if (jobRepo == null)
             {
@@ -70,10 +70,10 @@ namespace TodoApi.Controllers
             }
 
             //userRepo = _mapper.Map<User>(userUpdateDto);
-            _mapper.Map(userUpdateDto, jobRepo);
+            _mapper.Map(jobUpdateDto, jobRepo);
             _repo.UpdateJob(jobRepo);
 
-            _repo.SaveChanges();
+            await _repo.SaveChanges();
 
             return NoContent();
 
@@ -81,7 +81,7 @@ namespace TodoApi.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             var jobRepo = _repo.GetJobById(id);
 
@@ -90,8 +90,8 @@ namespace TodoApi.Controllers
                 return NotFound();
             }
 
-            _repo.DeleteJob(jobRepo);
-            _repo.SaveChanges();
+            _repo.DeleteJob(jobRepo.Result);
+             await _repo.SaveChanges();
 
             return NoContent();
         }

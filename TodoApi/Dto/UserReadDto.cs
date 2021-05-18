@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using TodoApi.Models;
 
 namespace TodoApi.Dto
 {
@@ -24,5 +26,8 @@ namespace TodoApi.Dto
         [Required]
         [MaxLength(250)]
         public string Mail { get; set; }
+
+        public List<JobReadDto> jobs { get; set; }
+
     }
 }

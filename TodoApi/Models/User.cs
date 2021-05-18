@@ -29,5 +29,6 @@ namespace TodoApi.Models
 
         public List<User_Has_Job> user_Has_jobs { get; set; }
 
+        
     }
 }

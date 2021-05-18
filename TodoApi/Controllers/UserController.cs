@@ -17,15 +17,12 @@ namespace TodoApi.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepo _repo;
-        private readonly TodoApiContext _context;
-        //private readonly IJobRepo _jobRepo;
         private readonly IMapper _mapper;
 
-        public UserController(IUserRepo repository, IMapper mapper, TodoApiContext context)
+        public UserController(IUserRepo repository, IMapper mapper)
         {
             _repo = repository;
             _mapper = mapper;
-            _context = context;
         }
 
         // GET: api/values
@@ -35,7 +32,7 @@ namespace TodoApi.Controllers
             var user = await _repo.GetUserById(id);
             if (user == null) { return NotFound(); }
 
-            return Ok(user);
+            return Ok(_mapper.Map<UserReadDto>(user));
         }
 
         // GET api/values/5
@@ -60,7 +57,7 @@ namespace TodoApi.Controllers
             return CreatedAtRoute(nameof(GetUserById), new { Id = messageDto.Id }, messageDto);
         }
 
-        [HttpPost("addJob/{id}")]
+        /*[HttpPost("addJob/{id}")]
         public async Task<ActionResult<User>> AddJob(int id, [FromBody] JobCreateDto jobCreateDto)
         {
             var job = _mapper.Map<Job>(jobCreateDto);
@@ -73,12 +70,12 @@ namespace TodoApi.Controllers
                 return NotFound();
             }
 
-            var user_has_jobs = new User_Has_Job { UserId = jobReceiver.Id , JobId=job.Id };
+            var user_has_jobs = new User_Has_Job { user = jobReceiver , JobId=job.Id };
             _context.user_Has_jobs.Add(user_has_jobs);
             _context.SaveChanges();
             var messageDto = _mapper.Map<JobReadDto>(job);
             return CreatedAtRoute( new { Id = messageDto.Id }, messageDto);
-        }
+        }*/
        
 
         // PUT api/values/5
