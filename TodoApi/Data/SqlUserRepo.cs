@@ -36,12 +36,12 @@ namespace TodoApi.Data
 
         public async Task<IEnumerable<User>> GetAllUsers()
         {
-            return await _context.users.ToListAsync();
+            return await _context.users.Include(u => u.user_Has_jobs).ThenInclude(s => s.job).ToListAsync();
         }
 
         public async Task<User> GetUserById(int id)
         {
-            var user = await _context.users.FindAsync(id);
+            var user = await _context.users.Include(u => u.user_Has_jobs).ThenInclude(s => s.job).FirstOrDefaultAsync(u => u.Id == id);
             return user;
         }
 

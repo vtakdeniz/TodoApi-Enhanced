@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-
+using System.Collections.Generic;
+using TodoApi.Models;
 
 namespace TodoApi.Dto
 {
@@ -23,6 +24,6 @@ namespace TodoApi.Dto
 
         public bool IsFinished { get; set; } = false;
 
-        
+        public List<User> owners { get; set; }
     }
 }

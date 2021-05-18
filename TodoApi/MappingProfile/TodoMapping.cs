@@ -17,7 +17,7 @@ namespace TodoApi.MappingProfile
         {
             CreateMap<UserCreateDto,User > ();
 
-            CreateMap<User, UserReadDto>().ForMember(dto => dto.jobs, t => t.MapFrom(h => h.user_Has_jobs.Select(cs => cs.job)));
+            CreateMap<User, UserReadDto>().ForMember(dto => dto.jobs, t => t.MapFrom(h => h.user_Has_jobs.Select(s => s.job)));
 
 
             CreateMap<User, UserUpdateDto>();
@@ -27,7 +27,8 @@ namespace TodoApi.MappingProfile
             CreateMap<JobUpdateDto, Job>();
             CreateMap<Job, JobUpdateDto>();
             CreateMap<JobCreateDto, Job>();
-            CreateMap<Job, JobReadDto>();
+            
+            CreateMap<Job, JobReadDto>().ForMember(dto => dto.owners, t => t.MapFrom(h=>h.user_Has_jobs.Select(u => u.user)));
 
         }
     }

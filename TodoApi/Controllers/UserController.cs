@@ -57,27 +57,6 @@ namespace TodoApi.Controllers
             return CreatedAtRoute(nameof(GetUserById), new { Id = messageDto.Id }, messageDto);
         }
 
-        /*[HttpPost("addJob/{id}")]
-        public async Task<ActionResult<User>> AddJob(int id, [FromBody] JobCreateDto jobCreateDto)
-        {
-            var job = _mapper.Map<Job>(jobCreateDto);
-
-            _context.jobs.Add(job);
-
-            User jobReceiver = await _repo.GetUserById(id);
-            
-            if (jobReceiver==null || job==null) {
-                return NotFound();
-            }
-
-            var user_has_jobs = new User_Has_Job { user = jobReceiver , JobId=job.Id };
-            _context.user_Has_jobs.Add(user_has_jobs);
-            _context.SaveChanges();
-            var messageDto = _mapper.Map<JobReadDto>(job);
-            return CreatedAtRoute( new { Id = messageDto.Id }, messageDto);
-        }*/
-       
-
         // PUT api/values/5
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateUser(int id, [FromBody] UserUpdateDto userUpdateDto)

@@ -53,13 +53,36 @@ namespace TodoApi.Controllers
             return Ok(userMessage);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> AddJobToUser(int id) { 
+        [HttpGet("GetJobs/{id}")]
+        public async Task<ActionResult<List<JobReadDto>>> GetJobsOfUser(int id) {
 
             User userFromRepo = await _context.users.Include(u => u.user_Has_jobs).ThenInclude(s => s.job).FirstOrDefaultAsync(u => u.Id == id);
-            return Ok(User);
+            if (userFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            UserReadDto userReadDto = _mapper.Map<UserReadDto>(userFromRepo);
+
+            return Ok(_mapper.Map<IEnumerable<JobReadDto>>(userReadDto.jobs));
 
         }
 
+
+        [HttpGet("GetOwners/{id}")]
+        public async Task<ActionResult<List<JobReadDto>>> GetOwnerOfJobs(int id)
+        {
+
+            Job jobFromRepo= await _context.jobs.Include(u => u.user_Has_jobs).ThenInclude(s => s.user).FirstOrDefaultAsync(u => u.Id == id);
+            if (jobFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            JobReadDto jobReadDto= _mapper.Map<JobReadDto>(jobFromRepo);
+
+            return Ok(jobReadDto.owners);
+
+        }
     }
 }

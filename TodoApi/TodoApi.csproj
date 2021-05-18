@@ -24,5 +24,6 @@
     <Folder Include="Data\" />
     <Folder Include="Dto\" />
     <Folder Include="MappingProfile\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 </Project>
