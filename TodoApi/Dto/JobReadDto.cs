@@ -18,12 +18,13 @@ namespace TodoApi.Dto
         [MaxLength(500)]
         public string Detail { get; set; }
 
+        public DateTime CreationDate { get; set; }
+
+        public DateTime DueDate { get; set; }
 
         public int Urgency { get; set; }
 
-
         public bool IsFinished { get; set; } = false;
 
-        public List<User> owners { get; set; }
     }
 }

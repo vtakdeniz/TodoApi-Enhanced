@@ -19,9 +19,11 @@ namespace TodoApi.Models
         [MaxLength(500)]
         public string Detail { get; set; }
 
+        public DateTime CreationDate { get; set; } = DateTime.Now;
+
+        public DateTime DueDate { get; set; }
 
         public int Urgency { get; set; }
-
 
         public bool IsFinished { get; set; } = false;
 

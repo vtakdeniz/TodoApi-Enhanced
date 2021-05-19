@@ -1,13 +1,18 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using TodoApi.Dto;
 
-namespace TodoApi.Dto
+namespace TodoApi.ViewModels
 {
-    public class JobUpdateDto
+    //View models are created to prevent self referencing loop exceptions
+    public class JobHasUserVm
     {
-        public JobUpdateDto()
+        public JobHasUserVm()
         {
         }
+
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(70)]
@@ -17,12 +22,12 @@ namespace TodoApi.Dto
         [MaxLength(500)]
         public string Detail { get; set; }
 
-        public DateTime CreationDate { get; set; }
-
-        public DateTime DueDate { get; set; }
 
         public int Urgency { get; set; }
 
+
         public bool IsFinished { get; set; } = false;
+
+        public List<UserReadDto> owners { get; set; }
     }
 }

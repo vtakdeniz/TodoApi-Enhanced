@@ -8,6 +8,7 @@ using TodoApi.Data;
 using TodoApi.Dto;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using TodoApi.ViewModels;
 
 namespace TodoApi.Controllers
 {
@@ -17,15 +18,17 @@ namespace TodoApi.Controllers
     {
         TodoApiContext _context;
         private readonly IMapper _mapper;
+        private readonly IJobRepo _jobRepo;
 
-        public UserJobController(TodoApiContext context, IMapper mapper)
+        public UserJobController(TodoApiContext context, IMapper mapper, IJobRepo jobRepo)
         {
             _context = context;
             _mapper = mapper;
+            _jobRepo = jobRepo;
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserReadDto>> AddJobToUser([FromBody] AddJobToUserDto addJobToUserDto)
+        public async Task<ActionResult<UserReadDto>> AddJobToUserById([FromBody] AddJobToUserDto addJobToUserDto)
         {
             User userFromRepo = await _context.users.Include(u => u.user_Has_jobs).ThenInclude(s => s.job).FirstOrDefaultAsync(u => u.Id == addJobToUserDto.UserId);
             if (userFromRepo == null) {
@@ -53,6 +56,37 @@ namespace TodoApi.Controllers
             return Ok(userMessage);
         }
 
+
+
+
+        [HttpPost("{id}")]
+        public async Task<ActionResult<UserReadDto>> AddJobToUserByObject(int id , [FromBody] JobCreateDto jobCreateDto)
+        {
+            User userFromRepo = await _context.users.Include(u => u.user_Has_jobs).ThenInclude(s => s.job).FirstOrDefaultAsync(u => u.Id == id);
+            if (userFromRepo == null)
+            {
+                return NotFound();
+            }
+            if (jobCreateDto==null) {
+                return BadRequest();
+            }
+
+            Job mappedJob = _mapper.Map<Job>(jobCreateDto);
+            await _context.jobs.AddAsync(mappedJob);
+
+            User_Has_Job relation = new User_Has_Job { user = userFromRepo, job=mappedJob};
+            await _context.user_Has_jobs.AddAsync(relation);
+
+            await _context.SaveChangesAsync();
+
+            var userMessage = _mapper.Map<UserHasJobVm>(userFromRepo);
+            return Ok(userMessage);
+        }
+
+
+
+
+
         [HttpGet("GetJobs/{id}")]
         public async Task<ActionResult<List<JobReadDto>>> GetJobsOfUser(int id) {
 
@@ -62,7 +96,7 @@ namespace TodoApi.Controllers
                 return NotFound();
             }
 
-            UserReadDto userReadDto = _mapper.Map<UserReadDto>(userFromRepo);
+            UserHasJobVm userReadDto = _mapper.Map<UserHasJobVm>(userFromRepo);
 
             return Ok(_mapper.Map<IEnumerable<JobReadDto>>(userReadDto.jobs));
 
@@ -79,9 +113,9 @@ namespace TodoApi.Controllers
                 return NotFound();
             }
 
-            JobReadDto jobReadDto= _mapper.Map<JobReadDto>(jobFromRepo);
+            JobHasUserVm jobReadDto= _mapper.Map<JobHasUserVm>(jobFromRepo);
 
-            return Ok(jobReadDto.owners);
+            return Ok(_mapper.Map<IEnumerable<UserReadDto>>(jobReadDto.owners));
 
         }
     }

@@ -7,6 +7,7 @@ using TodoApi.Models;
 using TodoApi.Data;
 using TodoApi.Dto;
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace TodoApi.Controllers
 {
@@ -79,6 +80,32 @@ namespace TodoApi.Controllers
 
         }
 
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> PartialJobUpdate(int id, JsonPatchDocument<JobUpdateDto> patchDocument)
+        {
+
+            var jobFromRepo = await _repo.GetJobById(id);
+            if (jobFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            var jobToPatch = _mapper.Map<JobUpdateDto>(jobFromRepo);
+            patchDocument.ApplyTo(jobToPatch, ModelState);
+
+            if (!TryValidateModel(jobToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            _mapper.Map(jobToPatch, jobFromRepo);
+
+            _repo.UpdateJob(jobFromRepo);
+            await _repo.SaveChanges();
+
+            return NoContent();
+        }
+
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
@@ -95,5 +122,6 @@ namespace TodoApi.Controllers
 
             return NoContent();
         }
+
     }
 }

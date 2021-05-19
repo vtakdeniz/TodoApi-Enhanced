@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApi.Data;
 
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(TodoApiContext))]
-    partial class TodoApiContextModelSnapshot : ModelSnapshot
+    [Migration("20210519191611_AddedDateTimeToJobCLass")]
+    partial class AddedDateTimeToJobCLass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

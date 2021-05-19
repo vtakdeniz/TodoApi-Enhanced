@@ -1,14 +1,14 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using TodoApi.Models;
+using TodoApi.Dto;
 
-namespace TodoApi.Dto
+namespace TodoApi.ViewModels
 {
-    public class UserReadDto
+    public class UserHasJobVm
     {
-        public UserReadDto() {
-
+        public UserHasJobVm()
+        {
         }
 
         [Key]
@@ -26,5 +26,6 @@ namespace TodoApi.Dto
         [MaxLength(250)]
         public string Mail { get; set; }
 
+        public List<JobReadDto> jobs { get; set; }
     }
 }

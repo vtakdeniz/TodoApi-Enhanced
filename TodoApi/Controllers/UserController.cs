@@ -7,6 +7,7 @@ using TodoApi.Models;
 using TodoApi.Data;
 using TodoApi.Dto;
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -75,6 +76,32 @@ namespace TodoApi.Controllers
 
             return NoContent();
 
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> PartialJobUpdate(int id, JsonPatchDocument<UserUpdateDto> patchDocument)
+        {
+
+            var userFromRepo = await _repo.GetUserById(id);
+            if (userFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            var userToPatch = _mapper.Map<UserUpdateDto>(userFromRepo);
+            patchDocument.ApplyTo(userToPatch, ModelState);
+
+            if (!TryValidateModel(userToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            _mapper.Map(userToPatch, userFromRepo);
+
+            _repo.UpdateUser(userFromRepo);
+            await _repo.SaveChanges();
+
+            return NoContent();
         }
 
         // DELETE api/values/5

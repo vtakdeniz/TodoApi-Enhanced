@@ -23,7 +23,7 @@ namespace TodoApi.Data
                 throw new ArgumentNullException();
             }
 
-            _context.jobs.Add(job);
+              _context.jobs.AddAsync(job);
         }
 
         public void DeleteJob(Job job)

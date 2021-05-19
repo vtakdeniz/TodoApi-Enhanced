@@ -30,7 +30,7 @@ namespace TodoApi
         {
             services.AddScoped<IUserRepo, SqlUserRepo>();
             services.AddScoped<IJobRepo, SqlJobRepo>();
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(s=> { s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
             services.AddDbContext <TodoApiContext>(opt=>opt.UseSqlServer(Configuration.GetConnectionString("TodoApiConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
