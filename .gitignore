@@ -1,4 +1,7 @@
+appsettings.json
+
 # globs
+
 Makefile.in
 *.userprefs
 *.usertasks
@@ -403,3 +406,5 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+TodoApi.sln
